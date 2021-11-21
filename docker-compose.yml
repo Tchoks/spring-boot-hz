@@ -1,0 +1,42 @@
+version: "3.8"
+services:
+  hazelcast:
+    image: hazelcast/hazelcast
+    container_name: hazelcast
+    ports:
+      - "5701:5701"
+    environment:
+      - "HZ_NETWORK_PUBLICADDRESS=127.0.0.1"
+      - "HZ_NETWORK_PORT_PORT=5701"
+    networks:
+      - hzl
+
+  hazelcast-mancenter:
+    image: hazelcast/management-center
+    container_name: hazelcast-mancenter
+    ports:
+      - "8080:8080"
+    environment:
+      - "HZ_MC_CLUSTER=dev"
+      - "HZ_MC_MEMBERS=127.0.0.1"
+      - "MC_INIT_CMD=./bin/mc-conf.sh cluster add -H=/data -ma 127.0.0.1:5701 -cn dev"
+    networks:
+      - hzl
+
+  app:
+    build:
+      context: .
+    container_name: hz-app
+    environment:
+      - "SERVER_PORT=8081"
+    ports:
+      - "8081:8081"
+    depends_on:
+      - hazelcast
+    networks:
+      - hzl
+
+
+networks:
+  hzl:
+    driver: bridge
