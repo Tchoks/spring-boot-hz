@@ -2,8 +2,3 @@ version: "3.8"
 services:
   hazelcast:
     image: hazelcast/hazelcast
-#  healtcheck:
-#      test: ["CMD", "curl -f http://localhost:5701/hazelcast/health/node-state || exit 1"]
-#      timeout: 3s
-#      interval: 1m
-#      retries: 3
